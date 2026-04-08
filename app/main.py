@@ -185,10 +185,16 @@ def main():
     layout="wide",
     initial_sidebar_state="expanded"
   )
-  
-  with open(r"C:\Users\user\Downloads\Python\cancer prediction\html\style.css") as f:
-    st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
-  
+
+# Get the path to the 'app' folder where main.py is
+  base_dir = os.path.dirname(__file__)
+
+# Go up one level, then into the 'html' folder
+  css_path = os.path.join(base_dir, "..", "html", "style.css")
+
+  with open(css_path) as f:
+     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
   input_data = add_sidebar()
   
   with st.container():

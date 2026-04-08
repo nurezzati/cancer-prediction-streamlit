@@ -7,13 +7,20 @@ import os
 
 
 def get_clean_data():
-  data = pd.read_csv(r"C:\Users\user\Downloads\Python\cancer prediction\data\data.csv")
+    # Get the path to the 'app' folder where main.py lives
+    base_dir = os.path.dirname(__file__)
+    
+    # Path: Go UP from 'app', then INTO 'data' folder
+    data_path = os.path.join(base_dir, "..", "data", "data.csv")
+    
+    # Read the CSV using the relative path
+    data = pd.read_csv(data_path)
   
-  data = data.drop(['Unnamed: 32', 'id'], axis=1)
+    data = data.drop(['Unnamed: 32', 'id'], axis=1)
   
-  data['diagnosis'] = data['diagnosis'].map({ 'M': 1, 'B': 0 })
+    data['diagnosis'] = data['diagnosis'].map({ 'M': 1, 'B': 0 })
   
-  return data
+    return data
 
 
 def add_sidebar():

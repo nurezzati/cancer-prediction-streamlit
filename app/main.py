@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
+import os
 
 
 def get_clean_data():
@@ -138,45 +139,42 @@ def get_radar_chart(input_data):
   return fig
 
 
-import os
-
 def add_predictions(input_data):
-    # This finds the folder where main.py actually lives
-    base_path = os.path.dirname(__file__)
+    # This finds the directory where main.py is located
+  base_path = os.path.dirname(__file__)
     
-    # This creates the full path to the files
-    model_path = os.path.join(base_path, "model.pkl")
-    scaler_path = os.path.join(base_path, "scaler.pkl")
+    # Path: Go UP from 'app', then INTO 'model'
+  model_path = os.path.join(base_path, '..', 'model', 'model.pkl')
+  scaler_path = os.path.join(base_path, '..', 'model', 'scaler.pkl')
 
-    # Load the files using the full paths
-    with open(model_path, "rb") as f:
-     model = pickle.load(f)
-        
-    with open(scaler_path, "rb") as f:
-     scaler = pickle.load(f)
+    # Load the files
+  with open(model_path, "rb") as f:
+   model = pickle.load(f)
+  with open(scaler_path, "rb") as f:
+    scaler = pickle.load(f)
   
 # Convert input dict to DataFrame with proper column names
-    input_df = pd.DataFrame([input_data])  # 1 row, columns = keys of input_data
+  input_df = pd.DataFrame([input_data])  # 1 row, columns = keys of input_data
 
 # Scale using the pre-fitted scaler
-    input_array_scaled = scaler.transform(input_df)
+  input_array_scaled = scaler.transform(input_df)
 
   
-    prediction = model.predict(input_array_scaled)
+  prediction = model.predict(input_array_scaled)
   
-    st.subheader("Cell cluster prediction")
-    st.write("The cell cluster is:")
+  st.subheader("Cell cluster prediction")
+  st.write("The cell cluster is:")
   
-    if prediction[0] == 0:
-     st.write("<span class='diagnosis benign'>Benign</span>", unsafe_allow_html=True)
-    else:
-     st.write("<span class='diagnosis malicious'>Malicious</span>", unsafe_allow_html=True)
+  if prediction[0] == 0:
+    st.write("<span class='diagnosis benign'>Benign</span>", unsafe_allow_html=True)
+  else:
+    st.write("<span class='diagnosis malicious'>Malicious</span>", unsafe_allow_html=True)
     
   
-    st.write("Probability of being benign: ", model.predict_proba(input_array_scaled)[0][0])
-    st.write("Probability of being malicious: ", model.predict_proba(input_array_scaled)[0][1])
+  st.write("Probability of being benign: ", model.predict_proba(input_array_scaled)[0][0])
+  st.write("Probability of being malicious: ", model.predict_proba(input_array_scaled)[0][1])
   
-    st.write("This app can assist medical professionals in making a diagnosis, but should not be used as a substitute for a professional diagnosis.")
+  st.write("This app can assist medical professionals in making a diagnosis, but should not be used as a substitute for a professional diagnosis.")
 
 
 
